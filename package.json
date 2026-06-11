@@ -1,7 +1,7 @@
 {
   "name": "@ordius/adonisjs-socketio",
   "description": "Socket.io provider for AdonisJS",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "engines": {
     "node": ">=24.6.0"
   },
