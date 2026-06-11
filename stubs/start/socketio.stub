@@ -1,0 +1,19 @@
+{{{ exports({ to: app.startPath('socketio.ts') }) }}}
+import socketio from '@ordius/adonisjs-socketio/services/main'
+import type { WebSocketContext } from '@ordius/adonisjs-socketio/types'
+
+socketio.on('connection', async ({ socket }: WebSocketContext) => {
+  socket.emit('welcome', { socketId: socket.id })
+})
+
+socketio.on('message', async ({ socket, eventData, ack }: WebSocketContext) => {
+  const message = eventData.message
+  console.log(message)
+
+  socket.emit('message', message)
+  ack?.({ ok: true })
+}, ['message'])
+
+socketio.on('disconnect', async ({ socket }: WebSocketContext) => {
+  console.log('Socket disconnected: ' + socket.id)
+})

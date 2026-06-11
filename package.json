@@ -1,0 +1,163 @@
+{
+  "name": "@ordius/adonisjs-socketio",
+  "description": "Socket.io provider for AdonisJS",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=24.6.0"
+  },
+  "type": "module",
+  "files": [
+    "build/src",
+    "build/providers",
+    "build/services",
+    "build/stubs",
+    "build/index.d.ts",
+    "build/index.js",
+    "build/configure.d.ts",
+    "build/configure.js"
+  ],
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    },
+    "./types": {
+      "types": "./build/src/types.d.ts",
+      "import": "./build/src/types.js"
+    },
+    "./adapters/redis": {
+      "types": "./build/src/adapters/redis.d.ts",
+      "import": "./build/src/adapters/redis.js"
+    },
+    "./socketio_provider": {
+      "types": "./build/providers/socketio_provider.d.ts",
+      "import": "./build/providers/socketio_provider.js"
+    },
+    "./services/main": {
+      "types": "./build/services/socketio_service.d.ts",
+      "import": "./build/services/socketio_service.js"
+    }
+  },
+  "scripts": {
+    "clean": "del-cli build",
+    "copy:templates": "copyfiles \"stubs/**/*.stub\" build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext=.ts",
+    "format": "prettier --write .",
+    "quick:test": "node --import=./tsnode.esm.js --enable-source-maps bin/test.ts",
+    "quick:test:integration": "node --import=./tsnode.esm.js --enable-source-maps bin/test.integration.ts",
+    "test:integration": "sh ./scripts/test-integration.sh",
+    "pretest": "npm run lint",
+    "test": "c8 npm run quick:test",
+    "precompile": "npm run lint && npm run clean",
+    "compile": "npm run clean && tsc",
+    "build": "npm run compile",
+    "prepublishOnly": "npm run build",
+    "postcompile": "npm run copy:templates",
+    "release": "release-it",
+    "release:patch": "release-it patch",
+    "release:minor": "release-it minor",
+    "release:major": "release-it major",
+    "release:beta": "release-it --preRelease=beta",
+    "release:alpha": "release-it --preRelease=alpha",
+    "release:dry": "release-it --dry-run"
+  },
+  "keywords": [
+    "adonisjs",
+    "socket.io"
+  ],
+  "author": {
+    "name": "Mixxtor",
+    "email": "mixxtor@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@adonisjs/assembler": "^8.4.0",
+    "@adonisjs/core": ">=7.3.4",
+    "@adonisjs/eslint-config": "3.1.0",
+    "@adonisjs/prettier-config": "^1.5.0",
+    "@adonisjs/redis": "^10.0.0",
+    "@adonisjs/session": "^8.1.0",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "@adonisjs/tsconfig": "^2.0.0",
+    "@japa/assert": "^4.2.0",
+    "@japa/runner": "^5.3.0",
+    "@poppinss/ts-exec": "^1.4.4",
+    "@types/node": "^25.9.3",
+    "c8": "^11.0.0",
+    "copyfiles": "^2.4.1",
+    "del-cli": "^7.0.0",
+    "eslint": "^10.4.1",
+    "prettier": "^3.8.4",
+    "release-it": "^20.2.0",
+    "ioredis": "^5.11.1",
+    "socket.io-client": "^4.8.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@sindresorhus/is": "^8.1.0",
+    "socket.io": "^4.8.3"
+  },
+  "peerDependencies": {
+    "@adonisjs/core": ">=6.0.0",
+    "@adonisjs/redis": ">=9.0.0",
+    "@socket.io/redis-adapter": ">=8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@adonisjs/redis": {
+      "optional": true
+    },
+    "@socket.io/redis-adapter": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "prettier": "@adonisjs/prettier-config",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "release-it": {
+    "git": {
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
+      "commitMessage": "chore(release): ${version}",
+      "tagAnnotation": "v${version}",
+      "push": true,
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "releaseName": "Release v${version}",
+      "releaseNotes": null,
+      "autoGenerate": true,
+      "draft": false,
+      "preRelease": false
+    },
+    "npm": {
+      "publish": true,
+      "skipChecks": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
+    }
+  },
+  "c8": {
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "exclude": [
+      "tests/**"
+    ]
+  }
+}

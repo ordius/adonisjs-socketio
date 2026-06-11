@@ -1,0 +1,26 @@
+{{{ exports({ to: app.configPath('socketio.ts') }) }}}
+import { defineConfig } from '@ordius/adonisjs-socketio'
+// import { redisAdapter } from '@ordius/adonisjs-socketio/adapters/redis'
+
+const socketioConfig = defineConfig({
+  enabled: true,
+  middleware: [
+    () => import('#middleware/container_bindings_middleware'),
+    () => import('@adonisjs/session/session_middleware'),
+    () => import('@adonisjs/auth/initialize_auth_middleware'),
+  ],
+  socketOptions: {
+    cors: {
+      // TODO: Replace '*' with your production domain before deploying.
+      origin: '*',
+    },
+  },
+  // Multi-node example: broadcast across processes via @adonisjs/redis.
+  // Requires: node ace add @adonisjs/redis && npm i @socket.io/redis-adapter
+  // adapter: redisAdapter({
+  //   connection: 'main', // autocompletes from your config/redis.ts connections
+  //   options: {}, // forwarded to @socket.io/redis-adapter
+  // }),
+})
+
+export default socketioConfig

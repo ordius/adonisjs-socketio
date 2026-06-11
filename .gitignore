@@ -1,0 +1,12 @@
+node_modules
+coverage
+.DS_STORE
+.npmrc
+.idea
+.vscode/
+*.log
+build
+dist
+yarn.lock
+shrinkwrap.yaml
+package-lock.json
