@@ -1,12 +1,6 @@
 # @ordius/adonisjs-socketio
 
-[![npm version](https://shields.io)](https://npmjs.com)
-[![npm downloads](https://shields.io)](https://npmjs.com)
-[![license](https://shields.io)](LICENSE.md)
-[![typescript](https://shields.io)](https://typescriptlang.org)
-[![github-actions](https://shields.io)](https://github.com)
-
-Socket.IO provider for AdonisJS v7.
+[Socket.IO](https://socket.io/) provider for [AdonisJS](https://adonisjs.com/) v7.
 
 ## Setup
 
