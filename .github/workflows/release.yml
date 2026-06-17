@@ -64,7 +64,7 @@ jobs:
       # This action will automatically create a Release PR, or create a GitHub Release if you are using the manifest file.
       - name: Run Release Please
         id: release
-        uses: googleapis/release-please-action@v6
+        uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
