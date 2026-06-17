@@ -54,7 +54,7 @@
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
     "postcompile": "npm run copy:templates",
-    "release": "release-it",
+    "release": "release-it --ci",
     "release:patch": "release-it patch",
     "release:minor": "release-it minor",
     "release:major": "release-it major",
@@ -87,7 +87,6 @@
     "@adonisjs/redis": "^10.0.0",
     "@adonisjs/session": "^8.1.0",
     "@adonisjs/tsconfig": "^2.0.0",
-    "@changesets/cli": "^2.31.0",
     "@japa/assert": "^4.2.0",
     "@japa/runner": "^5.3.0",
     "@poppinss/ts-exec": "^1.4.4",
@@ -133,12 +132,15 @@
   },
   "release-it": {
     "git": {
+      "commitMessage": "chore(release): v${version}",
+      "tagName": "v${version}",
+      "tagAnnotation": "v${version}",
       "requireCleanWorkingDir": true,
       "requireUpstream": true,
-      "commitMessage": "chore(release): ${version}",
-      "tagAnnotation": "v${version}",
       "push": true,
-      "tagName": "v${version}"
+      "pushArgs": [
+        "--follow-tags"
+      ]
     },
     "github": {
       "release": true,
@@ -150,13 +152,71 @@
     },
     "npm": {
       "publish": true,
-      "skipChecks": true
+      "publishPath": ".",
+      "skipChecks": true,
+      "access": "public",
+      "otp": false
+    },
+    "hooks": {
+      "before:init": [
+        "npm run lint",
+        "npm run typecheck"
+      ],
+      "after:bump": [
+        "npm run build"
+      ],
+      "before:release": [
+        "npm test"
+      ],
+      "after:release": [
+        "echo 🎉 Release ${version} completed successfully!"
+      ]
     },
     "plugins": {
       "@release-it/conventional-changelog": {
         "preset": {
-          "name": "angular"
-        }
+          "name": "conventionalcommits",
+          "types": [
+            {
+              "type": "feat",
+              "section": "✨ Features"
+            },
+            {
+              "type": "fix",
+              "section": "🐛 Bug Fixes"
+            },
+            {
+              "type": "perf",
+              "section": "⚡ Performance Improvements"
+            },
+            {
+              "type": "refactor",
+              "section": "♻️ Code Refactoring"
+            },
+            {
+              "type": "docs",
+              "section": "📚 Documentation"
+            },
+            {
+              "type": "test",
+              "section": "🧪 Tests"
+            },
+            {
+              "type": "build",
+              "section": "🏗️ Build System"
+            },
+            {
+              "type": "ci",
+              "section": "👷 CI/CD"
+            },
+            {
+              "type": "chore",
+              "section": "🔧 Maintenance"
+            }
+          ]
+        },
+        "infile": "CHANGELOG.md",
+        "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\n"
       }
     }
   },
