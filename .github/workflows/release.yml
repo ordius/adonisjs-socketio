@@ -1,51 +1,57 @@
-name: Release & Publish CD
+name: Release Please & Publish
 
 on:
   push:
     branches:
       - master
-  workflow_run:
-    workflows: ["Test CI"] # Khớp chính xác với 'name:' trong file test.yml của bạn
-    types:
-      - completed
-    branches:
-      - master
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write # Bắt buộc phải có để xác thực OIDC với npmjs (Provenance)
 
 jobs:
-  release:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  release-please:
     runs-on: ubuntu-latest
     environment: production
-    permissions:
-      contents: write
-      pull-requests: write
-      id-token: write # Required if NPM enforces provenance authentication
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # Step 1: Call Google Release Please
+      # This action will automatically create a Release PR, or create a GitHub Release if you are using the manifest file.
+      - name: Run Release Please
+        id: release
+        uses: googleapis/release-please-action@v4
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: release-please-manifest.json
 
+      # Step 2: Checkout code (Only runs when a new release is created)
+      - name: Checkout code
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/checkout@v4
+
+      # Step 3: Setup Node.js and configure npm registry for OIDC
       - name: Setup Node.js
+        if: ${{ steps.release.outputs.release_created }}
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org/'
 
+      # Step 4: Install dependencies
       - name: Install dependencies
+        if: ${{ steps.release.outputs.release_created }}
         run: npm ci --ignore-scripts
 
+      # Step 5: Build packages
       - name: Build packages
+        if: ${{ steps.release.outputs.release_created }}
         run: npm run build
 
-      - name: Configure Git Bot
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Run Release-it
-        run: npm run release
+      # Step 6: Publish to npmjs using OIDC and Provenance (Only runs when release_created = true)
+      - name: Publish to NPM
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm publish --provenance
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

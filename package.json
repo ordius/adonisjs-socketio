@@ -53,14 +53,7 @@
     "compile": "npm run clean && tsc",
     "build": "npm run compile",
     "prepublishOnly": "npm run build",
-    "postcompile": "npm run copy:templates",
-    "release": "release-it --ci",
-    "release:patch": "release-it patch",
-    "release:minor": "release-it minor",
-    "release:major": "release-it major",
-    "release:beta": "release-it --preRelease=beta",
-    "release:alpha": "release-it --preRelease=alpha",
-    "release:dry": "release-it --dry-run"
+    "postcompile": "npm run copy:templates"
   },
   "keywords": [
     "adonisjs",
@@ -90,7 +83,6 @@
     "@japa/assert": "^4.2.0",
     "@japa/runner": "^5.3.0",
     "@poppinss/ts-exec": "^1.4.4",
-    "@release-it/conventional-changelog": "^11.0.1",
     "@socket.io/redis-adapter": "^8.3.0",
     "@types/node": "^25.9.3",
     "c8": "^11.0.0",
@@ -99,7 +91,6 @@
     "eslint": "^10.5.0",
     "ioredis": "^5.11.1",
     "prettier": "^3.8.4",
-    "release-it": "^20.2.0",
     "socket.io-client": "^4.8.3",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
@@ -130,86 +121,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore(release): v${version}",
-      "tagName": "v${version}",
-      "tagAnnotation": "v${version}",
-      "requireCleanWorkingDir": true,
-      "requireUpstream": true,
-      "push": true,
-      "pushArgs": [
-        "--follow-tags"
-      ]
-    },
-    "github": {
-      "release": true,
-      "releaseName": "Release v${version}",
-      "releaseNotes": null,
-      "autoGenerate": true,
-      "draft": false,
-      "preRelease": false
-    },
-    "npm": {
-      "publish": true,
-      "publishPath": ".",
-      "skipChecks": true,
-      "access": "public",
-      "otp": false
-    },
-    "hooks": {
-      "after:release": [
-        "echo 🎉 Release ${version} completed successfully!"
-      ]
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": {
-          "name": "conventionalcommits",
-          "types": [
-            {
-              "type": "feat",
-              "section": "✨ Features"
-            },
-            {
-              "type": "fix",
-              "section": "🐛 Bug Fixes"
-            },
-            {
-              "type": "perf",
-              "section": "⚡ Performance Improvements"
-            },
-            {
-              "type": "refactor",
-              "section": "♻️ Code Refactoring"
-            },
-            {
-              "type": "docs",
-              "section": "📚 Documentation"
-            },
-            {
-              "type": "test",
-              "section": "🧪 Tests"
-            },
-            {
-              "type": "build",
-              "section": "🏗️ Build System"
-            },
-            {
-              "type": "ci",
-              "section": "👷 CI/CD"
-            },
-            {
-              "type": "chore",
-              "section": "🔧 Maintenance"
-            }
-          ]
-        },
-        "infile": "CHANGELOG.md",
-        "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.\n\n"
-      }
-    }
   },
   "c8": {
     "reporter": [
