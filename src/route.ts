@@ -8,7 +8,6 @@
  */
 
 import { moduleCaller, moduleImporter } from '@adonisjs/core/container'
-import is from '@sindresorhus/is'
 
 import type { Constructor, LazyImport } from '@poppinss/utils/types'
 import type {
@@ -126,7 +125,7 @@ export class WebSocketRoute<Controller extends Constructor<any> = any> {
       /**
        * The first item of the tuple is a class constructor
        */
-      if (is.class(controller)) {
+      if (this.#isClass(controller)) {
         return {
           reference: handler,
           ...moduleCaller(controller, method).toHandleMethod(),
@@ -189,5 +188,20 @@ export class WebSocketRoute<Controller extends Constructor<any> = any> {
   prefix(prefix: string): this {
     this.#prefixes.push(prefix)
     return this
+  }
+
+  /**
+   * Check if a value is a class constructor
+   * @private
+   * @template T - Type of the class instance
+   * @param value - Value to check
+   * @returns True if the value is a class constructor
+   */
+  #isClass<T = unknown>(
+    value: unknown
+  ): value is Constructor<T, unknown[]> & {
+    prototype: T
+  } {
+    return typeof value === 'function' && /^class(?:\s+|\{)/v.test(value.toString())
   }
 }
