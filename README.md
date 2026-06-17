@@ -1,5 +1,11 @@
 # @ordius/adonisjs-socketio
 
+[![npm version](https://shields.io)](https://npmjs.com)
+[![npm downloads](https://shields.io)](https://npmjs.com)
+[![license](https://shields.io)](LICENSE.md)
+[![typescript](https://shields.io)](https://typescriptlang.org)
+[![github-actions](https://shields.io)](https://github.com)
+
 Socket.IO provider for AdonisJS v7.
 
 ## Setup
@@ -26,14 +32,18 @@ socketio.on('connection', async ({ socket }: WebSocketContext) => {
   socket.emit('welcome', { socketId: socket.id })
 })
 
-socketio.on('chat:send', async ({ socket, eventData, ack }: WebSocketContext) => {
-  socket.broadcast.emit('chat:new', {
-    message: eventData.message,
-    senderId: socket.id,
-  })
+socketio.on(
+  'chat:send',
+  async ({ socket, eventData, ack }: WebSocketContext) => {
+    socket.broadcast.emit('chat:new', {
+      message: eventData.message,
+      senderId: socket.id,
+    })
 
-  ack?.({ ok: true })
-}, ['message'])
+    ack?.({ ok: true })
+  },
+  ['message']
+)
 ```
 
 ### Route Grouping
@@ -157,3 +167,7 @@ What the Docker Compose script (`npm run test:integration`) does automatically:
 1. Starts Redis from `docker-compose.test.yml`
 2. Runs `tests/integration/redis_broadcast.spec.ts`
 3. Stops and removes test containers/volumes (even on failure)
+
+# Credits
+
+- Inspired by [@xnicecraft/adonisjs-socketio](https://github.com/XniceCraft/adonisjs-socketio)
