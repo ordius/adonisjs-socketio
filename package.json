@@ -122,7 +122,8 @@
   },
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "latest",
+    "provenance": true
   },
   "prettier": "@adonisjs/prettier-config",
   "commitlint": {
@@ -158,16 +159,6 @@
       "otp": false
     },
     "hooks": {
-      "before:init": [
-        "npm run lint",
-        "npm run typecheck"
-      ],
-      "after:bump": [
-        "npm run build"
-      ],
-      "before:release": [
-        "npm test"
-      ],
       "after:release": [
         "echo 🎉 Release ${version} completed successfully!"
       ]

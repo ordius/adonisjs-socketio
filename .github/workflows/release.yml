@@ -38,13 +38,12 @@ jobs:
       - name: Build packages
         run: npm run build
 
-      - name: Create Release PR or Publish to NPM
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          # Automatically bump version and create tag via changeset
-          version: npx changeset version
-          publish: npx changeset publish
+      - name: Configure Git Bot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github
+
+      - name: Run Release-it
+        run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
