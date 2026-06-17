@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.1.0](https://github.com/ordius/adonisjs-socketio/compare/adonisjs-socketio-v1.0.1...adonisjs-socketio-v1.1.0) (2026-06-17)
+
+
+### Features
+
+* add Socket.IO integration with middleware support and Redis adapter ([237b965](https://github.com/ordius/adonisjs-socketio/commit/237b965afe52a364281e2d0bc28f63628bba9aae))
+
+
+### Bug Fixes
+
+* correct email domain for Git bot configuration in release workflow ([7cd8409](https://github.com/ordius/adonisjs-socketio/commit/7cd8409836f2adeee4212b1c6c399a0ea4e16f98))
+
 ## [1.0.1](https://github.com/ordius/adonisjs-socketio/compare/v1.0.0...v1.0.1) (2026-06-17)
 
 ### 🐛 Bug Fixes
