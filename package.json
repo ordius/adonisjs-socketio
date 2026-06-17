@@ -70,6 +70,14 @@
     "name": "Mixxtor",
     "email": "mixxtor@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ordius/adonisjs-socketio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ordius/adonisjs-socketio/issues"
+  },
+  "homepage": "https://github.com/ordius/adonisjs-socketio#readme",
   "license": "MIT",
   "devDependencies": {
     "@adonisjs/assembler": "^8.4.0",
