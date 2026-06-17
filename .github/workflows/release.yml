@@ -41,7 +41,7 @@ jobs:
       - name: Configure Git Bot
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Run Release-it
         run: npm run release
