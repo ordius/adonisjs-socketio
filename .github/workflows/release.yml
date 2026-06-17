@@ -2,8 +2,9 @@ name: Release Please & Publish
 
 on:
   push:
-    branches:
-      - master
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
 
 permissions:
   contents: write
@@ -11,9 +12,53 @@ permissions:
   id-token: write # Required if NPM enforces provenance authentication
 
 jobs:
+  # Job 1: Quick code quality check (Runs only on Ubuntu)
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: 'npm' # Added cache for npm to speed up installs
+      - name: Install dependencies
+        run: npm ci # Use npm ci for faster and more reliable installs in CI
+      - name: Run lint & typecheck
+        run: |
+          npm run lint
+          npm run typecheck
+
+  # Job 2: Run test matrix (Only runs if Job 1 has passed)
+  tests:
+    needs: code-quality
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [24.x]
+    steps:
+      - uses: actions/checkout@v6
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+
+  # Job 3: Release Please & Publish (Only runs if Job 2 has passed)
   release-please:
+    needs: tests
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     environment: production
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write # Required if NPM enforces provenance authentication
     steps:
       # Step 1: Call Google Release Please
       # This action will automatically create a Release PR, or create a GitHub Release if you are using the manifest file.
@@ -52,3 +97,5 @@ jobs:
       - name: Publish to NPM
         if: ${{ steps.release.outputs.release_created }}
         run: npm publish --provenance
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
